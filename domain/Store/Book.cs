@@ -1,6 +1,6 @@
 ﻿using System;
 namespace Store;
-
+//мать коли 
 public class Book
 {
     public int Id { get; set; }
