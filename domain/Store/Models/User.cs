@@ -4,6 +4,7 @@ namespace Store;
 
 public class User
 {
+    [Key]
     private int Id { get; }
 
     [Required(ErrorMessage = "Full Name is required")]
@@ -34,8 +35,7 @@ public class User
         FullName = fullName;
         Password = password;
         BirthDay = birthday;
-        Phone = phone;
+        Phone = Sanitizers.PhoneSanitizer.Sanitize(phone);
         Email = email;
-        
     }
 }
