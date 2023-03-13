@@ -37,7 +37,26 @@ namespace Store.UseCases
                 return Result.Fail<User>("Email can`t be empty");
             }
         }
-        
-        
+
+        public Result<User> SignUp(User user)
+        {
+            try
+            {
+                if(!_db.IsUserExist(user.Email))
+                {
+                    _db.Create(user);
+                    return Result.Ok(user);
+                }
+                else
+                {
+                    return Result.Fail<User>("Error: user with current email is already exist");
+                }
+            }
+            catch (Exception e)
+            {
+                return Result.Fail<User>("Error while reading: " + e.Message);
+            }
+        }
+
     }
 }
