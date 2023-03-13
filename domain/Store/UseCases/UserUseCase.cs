@@ -1,4 +1,5 @@
 ﻿using Store.Models;
+using Store.Logic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,29 +10,34 @@ namespace Store.UseCases
 {
     public class UserUseCase
     {
-        public Result<User> SignIn(User user)
+        private readonly IUserRepository _db;
+
+        public UserUseCase(IUserRepository db)
         {
-            return Result.Ok(user);
+            _db = db;
         }
 
-        public Result<User> SignUp(User user)
+        public Result<User> SignIn(string email)
         {
-            return Result.Ok(user);
+            if (!string.IsNullOrEmpty(email))
+            {
+                try
+                {
+                    var result = _db.GetUserByEmail(email);
+                    return result is null ? Result.Fail<User>("No User with such mail") : Result.Ok(result);
+                    //ToDo Здесь должен быть токен
+                }
+                catch (Exception e)
+                {
+                    return Result.Fail<User>("Error while reading: " + e.Message);
+                } 
+            }
+            else
+            {
+                return Result.Fail<User>("Email can`t be empty");
+            }
         }
-
-        public Result<User> SignOut(User user)
-        {
-            return Result.Ok(user);
-        }
-
-        public Result<bool> IsUserExists(string login)
-        {
-            return Result.Ok(true);
-        }
-
-        public Result<User> GetUserByLogin(User user)
-        {
-            return Result.Ok(user);
-        }
+        
+        
     }
 }
